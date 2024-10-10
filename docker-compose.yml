@@ -1,0 +1,28 @@
+version: '3'
+services:
+  studentportaldb:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_DATABASE=StudentPortal
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  studentservice:
+    build: .
+    ports:
+      - "8084:8084"
+    expose:
+      - "8084"
+    links:
+      - studentportaldb
+    depends_on:
+      - studentportaldb
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://studentportaldb:3306/StudentPortal?allowPublicKeyRetrieval=true
+
+volumes:
+  mysql-data:
